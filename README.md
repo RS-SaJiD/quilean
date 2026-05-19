@@ -2,17 +2,23 @@
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
+![Version](https://img.shields.io/badge/Version-1.0.0-yellow)
 
-**A fast, smart & beautiful Python CLI tool** to organize, rename, clean and manage your messy files efficiently.
+**A fast, smart and modern Python CLI tool** to organize, clean, rename and manage your files efficiently.
+
 
 ### ✨ Features
 
-- Smart file organization by type (extension)
-- Bulk Rename with custom pattern
-- Junk & Temporary files cleaner
+- Smart File Organizer (by file type)
+- Duplicate File Finder & Remover
+- Bulk Rename with pattern
+- Junk/Temp File Cleaner
+- Smart Tagging (keyword based)
+- Undo Last Operation
 - Folder Statistics
-- Colorful CLI interface
-- Easy to install & use
+- Config File Support (`\~/.quilean/config.toml`)
+- Beautiful Rich CLI Interface
+
 
 ### Installation
 
