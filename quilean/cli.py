@@ -8,8 +8,10 @@ from .renamer import bulk_rename
 from .cleaner import clean_junk
 from .utils import show_stats
 from .history import get_last_operation
+from .duplicates import find_duplicates
 
 console = Console()
+
 
 @click.group()
 @click.version_option(version="1.0.0")
@@ -50,6 +52,14 @@ def stats(path):
 
 
 @main.command()
+@click.argument("path", default=".", required=False)
+def duplicates(path):
+    """Find and remove duplicate files"""
+    console.print(Panel.fit("[bold red]🔍 Duplicate File Finder[/bold red]"))
+    find_duplicates(path)
+
+
+@main.command()
 def undo():
     """Undo the last operation"""
     last_op = get_last_operation()
@@ -65,12 +75,3 @@ def undo():
             try:
                 Path(file['to']).rename(file['from'])
                 console.print(f"[green]Reverted:[/green] {Path(file['to']).name}")
-            except Exception as e:
-                console.print(f"[red]Failed to revert {file['to']}: {e}[/red]")
-        console.print("[bold green]✅ Undo completed successfully![/bold green]")
-    else:
-        console.print("[yellow]Undo for this operation type is not implemented yet.[/yellow]")
-
-
-if __name__ == "__main__":
-    main()
