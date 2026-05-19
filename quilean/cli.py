@@ -44,3 +44,28 @@ def stats(path):
 
 if __name__ == "__main__":
     main()
+
+from .history import get_last_operation, clear_history
+
+
+@main.command()
+def undo():
+    """Undo the last operation"""
+    last_op = get_last_operation()
+    if not last_op:
+        console.print("[yellow]No operation history found to undo.[/yellow]")
+        return
+
+    console.print(f"[bold yellow]Last Operation:[/bold yellow] {last_op['operation']} at {last_op['timestamp']}")
+    
+    if last_op['operation'] == "organize":
+        moved_files = last_op['details'].get('moved_files', [])
+        for file in reversed(moved_files):
+            try:
+                Path(file['to']).rename(file['from'])
+                console.print(f"[green]Reverted:[/green] {Path(file['to']).name}")
+            except Exception as e:
+                console.print(f"[red]Failed to revert {file['to']}: {e}[/red]")
+        console.print("[bold green]✅ Undo completed successfully![/bold green]")
+    else:
+        console.print("[yellow]Undo for this operation type is not implemented yet.[/yellow]")
