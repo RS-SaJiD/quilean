@@ -7,8 +7,9 @@ from .organizer import organize_files
 from .renamer import bulk_rename
 from .cleaner import clean_junk
 from .utils import show_stats
-from .history import get_last_operation
 from .duplicates import find_duplicates
+from .history import get_last_operation
+from .tagger import add_smart_tags
 
 console = Console()
 
@@ -60,6 +61,14 @@ def duplicates(path):
 
 
 @main.command()
+@click.argument("path", default=".", required=False)
+def tag(path):
+    """Apply smart tags to files"""
+    console.print(Panel.fit("[bold magenta]🏷️ Smart Tagging Tool[/bold magenta]"))
+    add_smart_tags(path)
+
+
+@main.command()
 def undo():
     """Undo the last operation"""
     last_op = get_last_operation()
@@ -75,3 +84,12 @@ def undo():
             try:
                 Path(file['to']).rename(file['from'])
                 console.print(f"[green]Reverted:[/green] {Path(file['to']).name}")
+            except Exception as e:
+                console.print(f"[red]Failed to revert {file['to']}: {e}[/red]")
+        console.print("[bold green]✅ Undo completed successfully![/bold green]")
+    else:
+        console.print("[yellow]Undo for this operation type is not implemented yet.[/yellow]")
+
+
+if __name__ == "__main__":
+    main()
