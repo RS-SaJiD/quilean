@@ -27,7 +27,7 @@ quilean --help
 - quilean stats [path] → Shows folder information.
 
 ### Test 
-```
+```bash
 # To run a test
 python -m pytest tests/ -v
 # Or
