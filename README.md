@@ -25,3 +25,11 @@ quilean --help
 - quilean rename [path] → Bulk rename
 - quilean clean [path] → Deletes junk files
 - quilean stats [path] → Shows folder information.
+
+### Test 
+```
+# To run a test
+python -m pytest tests/ -v
+# Or
+python -m unittest discover -s tests
+```
