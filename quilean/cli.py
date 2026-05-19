@@ -1,10 +1,13 @@
 import click
+from pathlib import Path
 from rich.console import Console
 from rich.panel import Panel
+
 from .organizer import organize_files
 from .renamer import bulk_rename
 from .cleaner import clean_junk
 from .utils import show_stats
+from .history import get_last_operation
 
 console = Console()
 
@@ -14,13 +17,14 @@ def main():
     """Quilean - Smart File Organizer & Cleaner CLI"""
     pass
 
+
 @main.command()
 @click.argument("path", default=".", required=False)
 def organize(path):
     """Organize files into folders by type"""
     console.print(Panel.fit("[bold green]Starting Smart Organization...[/bold green]"))
     organize_files(path)
-    console.print("[bold green]✅ Organization completed![/bold green]")
+
 
 @main.command()
 @click.argument("path", default=".", required=False)
@@ -29,6 +33,7 @@ def rename(path):
     console.print(Panel.fit("[bold cyan]Bulk Rename Tool[/bold cyan]"))
     bulk_rename(path)
 
+
 @main.command()
 @click.argument("path", default=".", required=False)
 def clean(path):
@@ -36,16 +41,12 @@ def clean(path):
     console.print(Panel.fit("[bold yellow]Cleaning junk files...[/bold yellow]"))
     clean_junk(path)
 
+
 @main.command()
 @click.argument("path", default=".", required=False)
 def stats(path):
     """Show folder statistics"""
     show_stats(path)
-
-if __name__ == "__main__":
-    main()
-
-from .history import get_last_operation, clear_history
 
 
 @main.command()
@@ -69,3 +70,7 @@ def undo():
         console.print("[bold green]✅ Undo completed successfully![/bold green]")
     else:
         console.print("[yellow]Undo for this operation type is not implemented yet.[/yellow]")
+
+
+if __name__ == "__main__":
+    main()
