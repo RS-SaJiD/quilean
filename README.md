@@ -37,11 +37,27 @@ python -m pytest tests/ -v
 # Or
 python -m unittest discover -s tests
 ```
+
+
 ### 📁 Project Structure
+
+```bash
 quilean/
-├── quilean/          # Main package
-├── tests/            # Unit tests
-├── README.md
+├── quilean/                  # Main Python Package
+│   ├── __init__.py
+│   ├── cli.py
+│   ├── config.py
+│   ├── organizer.py
+│   ├── renamer.py
+│   ├── cleaner.py
+│   └── utils.py
+├── tests/                    # Unit tests
+│   ├── __init__.py
+│   ├── test_organizer.py
+│   └── test_cli.py
+├── .gitignore
 ├── LICENSE
-├── setup.py
-└── pyproject.toml
+├── README.md
+├── pyproject.toml
+├── requirements.txt
+└── setup.py
