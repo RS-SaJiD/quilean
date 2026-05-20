@@ -21,7 +21,20 @@ def bulk_rename(target_path="."):
     console.print(f"[cyan]{len(files)} files found.[/cyan]")
     
     pattern = Prompt.ask("Enter new name pattern (use {n} for number)", default="file_{n}")
-    start_num = int(Prompt.ask("Starting number", default="1"))
+    
+    if not pattern or "{n}" not in pattern:
+        console.print("[red]❌ Pattern must contain {n} placeholder![/red]")
+        return
+    
+    while True:
+        try:
+            start_num = int(Prompt.ask("Starting number", default="1"))
+            if start_num < 0:
+                console.print("[red]❌ Number must be positive![/red]")
+                continue
+            break
+        except ValueError:
+            console.print("[red]❌ Please enter a valid number![/red]")
 
     renamed_count = 0
     for i, file in enumerate(files, start=start_num):
