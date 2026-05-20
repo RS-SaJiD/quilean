@@ -35,14 +35,15 @@ def add_smart_tags(target_path="."):
 
         for file in files:
             name_lower = file.name.lower()
-            added = []
+            added = set()  # Use set to avoid duplicates
 
             for tag, words in keywords.items():
                 if any(word in name_lower for word in words):
-                    added.append(tag)
+                    added.add(tag)
 
             if added:
-                new_name = f"[{','.join(added)}] {file.name}"
+                tag_str = ",".join(sorted(added))  # Sort for consistency
+                new_name = f"[{tag_str}] {file.name}"
                 try:
                     file.rename(file.parent / new_name)
                     console.print(f"[blue]Tagged:[/blue] {file.name} → {new_name}")
