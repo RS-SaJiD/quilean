@@ -45,8 +45,9 @@ def organize_files(target_path="."):
                         dest = folder_path / f"{name}_{counter}{suffix}"
                         counter += 1
 
+                    original_item_path = str(item)
                     item.rename(dest)
-                    moved_files.append({"from": str(item), "to": str(dest)})
+                    moved_files.append({"from": original_item_path, "to": str(dest)})
                     logger.info(f"Moved {item.name} to {folder_name}/")
                     moved = True
                     break
@@ -55,8 +56,9 @@ def organize_files(target_path="."):
                 folder_path = target / "Others"
                 folder_path.mkdir(exist_ok=True)
                 dest = folder_path / item.name
+                original_item_path = str(item)
                 item.rename(dest)
-                moved_files.append({"from": str(item), "to": str(dest)})
+                moved_files.append({"from": original_item_path, "to": str(dest)})
                 logger.info(f"Moved {item.name} to Others/")
 
             progress.update(task, advance=1)
