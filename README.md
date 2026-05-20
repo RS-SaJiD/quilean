@@ -36,6 +36,19 @@ quilean --help
 - quilean clean [path] → Deletes junk files
 - quilean stats [path] → Shows folder information.
 
+### Basic Usage 
+```bash
+quilean --help                    # See all commands
+quilean organize                  # Organize current folder
+quilean organize \~/Downloads      # Specific folder
+quilean duplicates                # Find duplicate files
+quilean clean                     # Delete junk files
+quilean rename                    # Bulk rename
+quilean tag                       # Smart tagging
+quilean stats                     # Folder statistics
+quilean undo                      # Undo last action
+```
+
 ### Test 
 ```bash
 # To run a test
@@ -49,15 +62,18 @@ python -m unittest discover -s tests
 
 ```bash
 quilean/
-├── quilean/                  # Main Python Package
+├── quilean/                      # Main Package
 │   ├── __init__.py
 │   ├── cli.py
 │   ├── config.py
 │   ├── organizer.py
 │   ├── renamer.py
 │   ├── cleaner.py
-│   └── utils.py
-├── tests/                    # Unit tests
+│   ├── utils.py
+│   ├── duplicates.py
+│   ├── history.py
+│   └── tagger.py
+├── tests/                        # Unit Tests
 │   ├── __init__.py
 │   ├── test_organizer.py
 │   └── test_cli.py
@@ -67,3 +83,4 @@ quilean/
 ├── pyproject.toml
 ├── requirements.txt
 └── setup.py
+```
