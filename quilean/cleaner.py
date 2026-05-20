@@ -33,6 +33,14 @@ def clean_junk(target_path="."):
         console.print("[bold green]🎉 No junk files or folders found![/bold green]")
         return
 
+    console.print("[yellow]⚠️ Junk items found:[/yellow]")
+    for item in junk_items:
+        console.print(f"  - {item.relative_to(target)}")
+    
+    if not Confirm.ask(f"Delete {len(junk_items)} junk item(s)?", default=False):
+        console.print("[yellow]Cleanup cancelled.[/yellow]")
+        return
+
     deleted = 0
 
     with Progress() as progress:
