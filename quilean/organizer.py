@@ -1,8 +1,10 @@
 from pathlib import Path
 import os
 from rich.console import Console
+from rich.progress import Progress
 from .config import load_config
 from .history import save_operation
+from .logger import logger
 
 console = Console()
 config = load_config()
@@ -14,11 +16,18 @@ def organize_files(target_path="."):
         console.print("[red]Error: Path does not exist![/red]")
         return
 
+    files = [item for item in target.iterdir() if item.is_file()]
+    if not files:
+        console.print("[yellow]No files found to organize.[/yellow]")
+        return
+
     moved_files = []
     folders_config = config["folders"]
 
-    for item in target.iterdir():
-        if item.is_file():
+    with Progress() as progress:
+        task = progress.add_task("[green]Organizing files...", total=len(files))
+
+        for item in files:
             ext = item.suffix.lower()
             moved = False
 
@@ -38,7 +47,7 @@ def organize_files(target_path="."):
 
                     item.rename(dest)
                     moved_files.append({"from": str(item), "to": str(dest)})
-                    console.print(f"[green]Moved:[/green] {item.name} → {folder_name}/")
+                    logger.info(f"Moved {item.name} to {folder_name}/")
                     moved = True
                     break
 
@@ -48,7 +57,9 @@ def organize_files(target_path="."):
                 dest = folder_path / item.name
                 item.rename(dest)
                 moved_files.append({"from": str(item), "to": str(dest)})
-                console.print(f"[yellow]Moved:[/yellow] {item.name} → Others/")
+                logger.info(f"Moved {item.name} to Others/")
+
+            progress.update(task, advance=1)
 
     if moved_files:
         save_operation("organize", {
