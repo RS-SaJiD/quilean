@@ -1,11 +1,11 @@
 from pathlib import Path
 from rich.console import Console
-from rich.prompt import Confirm
+from rich.progress import Progress
 from .config import load_config
+from .logger import logger
 
 console = Console()
 config = load_config()
-
 
 def add_smart_tags(target_path="."):
     target = Path(target_path).resolve()
@@ -13,29 +13,44 @@ def add_smart_tags(target_path="."):
         console.print("[red]Error: Path does not exist![/red]")
         return
 
-    console.print(f"[cyan]Applying smart tags in:[/cyan] {target}")
-    tagged = 0
+    files = [f for f in target.rglob("*") if f.is_file()]
+    if not files:
+        console.print("[yellow]No files found.[/yellow]")
+        return
+
+    console.print(f"[cyan]Applying smart tags to {len(files)} files...[/cyan]")
 
     keywords = {
-        "important": ["important", "urgent", "final", "report"],
-        "backup": ["backup", "old", "copy"],
-        "personal": ["personal", "private", "family"],
-        "work": ["work", "office", "client", "meeting"]
+        "important": ["important", "urgent", "final", "submission", "report", "invoice"],
+        "backup": ["backup", "old", "copy", "bkp"],
+        "personal": ["personal", "private", "family", "photo", "selfie"],
+        "work": ["work", "office", "client", "meeting", "project", "proposal"],
+        "archive": ["archive", "old", "202", "completed"]
     }
 
-    for file in target.rglob("*"):
-        if file.is_file():
+    tagged_count = 0
+
+    with Progress() as progress:
+        task = progress.add_task("[magenta]Tagging files...", total=len(files))
+
+        for file in files:
             name_lower = file.name.lower()
-            added_tags = []
+            added = []
 
             for tag, words in keywords.items():
                 if any(word in name_lower for word in words):
-                    # For now, we'll just print suggested tag (we can extend to rename or metadata later)
-                    console.print(f"[blue][TAG][/blue] {file.name} → [bold]{tag}[/bold]")
-                    added_tags.append(tag)
-                    tagged += 1
+                    added.append(tag)
 
-    if tagged == 0:
-        console.print("[yellow]No files matched smart tagging rules.[/yellow]")
-    else:
-        console.print(f"\n[bold green]✅ Smart tagging completed on {tagged} files.[/bold green]")
+            if added:
+                new_name = f"[{','.join(added)}] {file.name}"
+                try:
+                    file.rename(file.parent / new_name)
+                    console.print(f"[blue]Tagged:[/blue] {file.name} → {new_name}")
+                    logger.info(f"Tagged {file.name} with {added}")
+                    tagged_count += 1
+                except Exception as e:
+                    logger.error(f"Failed to tag {file.name}: {e}")
+
+            progress.update(task, advance=1)
+
+    console.print(f"\n[bold green]✅ Smart tagging completed! {tagged_count} files tagged.[/bold green]")
