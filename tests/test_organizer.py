@@ -7,13 +7,13 @@ from quilean.organizer import organize_files
 class TestOrganizer(unittest.TestCase):
 
     def setUp(self):
-        # Create temporary directory for testing
         self.test_dir = Path(tempfile.mkdtemp())
-        # Create some test files
-        (self.test_dir / "photo1.jpg").touch()
+        # Test files
+        (self.test_dir / "image1.jpg").touch()
         (self.test_dir / "document.pdf").touch()
         (self.test_dir / "song.mp3").touch()
         (self.test_dir / "random.xyz").touch()
+        (self.test_dir / "note.txt").touch()
 
     def tearDown(self):
         shutil.rmtree(self.test_dir)
@@ -25,6 +25,10 @@ class TestOrganizer(unittest.TestCase):
         self.assertTrue((self.test_dir / "Documents").exists())
         self.assertTrue((self.test_dir / "Audio").exists())
         self.assertTrue((self.test_dir / "Others").exists())
+
+        self.assertTrue((self.test_dir / "Images" / "image1.jpg").exists())
+        self.assertTrue((self.test_dir / "Others" / "random.xyz").exists())
+
 
 if __name__ == '__main__':
     unittest.main()
