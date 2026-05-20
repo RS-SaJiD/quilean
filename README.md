@@ -9,18 +9,17 @@
 
 ### ✨ Features
 
-- Smart File Organizer (by file type)
-- Duplicate File Finder & Remover
-- Bulk Rename with pattern
-- Junk/Temp File Cleaner
-- Smart Tagging (keyword based)
-- Undo Last Operation
-- Folder Statistics
-- Config File Support (`\~/.quilean/config.toml`)
-- Beautiful Rich CLI Interface
+- 📁 Smart File Organizer (by file type)
+- 🔍 Duplicate File Finder & Remover
+- ✍️ Bulk Rename with custom pattern
+- 🗑️ Junk & Temporary File Cleaner
+- 🏷️ Smart Tagging (keyword based)
+- ↩️ Undo Last Operation
+- 📊 Folder Statistics
+- ⚙️ Config File Support (`\~/.quilean/config.toml`)
+- 🎨 Beautiful Rich CLI with colors
 
-
-### Installation
+### 🚀 Installation
 
 ```bash
 # From GitHub
@@ -30,13 +29,7 @@ pip install git+https://github.com/RS-SaJiD/quilean.git
 quilean --help
 ```
 
-### Commands 
-- quilean organize [path] → Organizes files
-- quilean rename [path] → Bulk rename
-- quilean clean [path] → Deletes junk files
-- quilean stats [path] → Shows folder information.
-
-### Basic Usage 
+### 📋 Basic Usage 
 ```bash
 quilean --help                    # See all commands
 quilean organize                  # Organize current folder
@@ -49,6 +42,17 @@ quilean stats                     # Folder statistics
 quilean undo                      # Undo last action
 ```
 
+### 📌 Commands 
+| Command          | Description                          |
+|------------------|--------------------------------------|
+| `organize`       | 📁 Files organize by type            |
+| `duplicates`     | 🔍 Find and delete duplicate files   |
+| `clean`          | 🗑️ Clean junk/temp files            |
+| `rename`         | ✍️ Bulk rename files                 |
+| `tag`            | 🏷️ Apply smart tags                  |
+| `stats`          | 📊 Show folder statistics            |
+| `undo`           | ↩️ Undo last operation               |
+
 ### Test 
 ```bash
 # To run a test
@@ -56,7 +60,6 @@ python -m pytest tests/ -v
 # Or
 python -m unittest discover -s tests
 ```
-
 
 ### 📁 Project Structure
 
