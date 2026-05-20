@@ -2,9 +2,11 @@ from pathlib import Path
 from collections import defaultdict
 import hashlib
 from rich.console import Console
+from rich.progress import Progress
 from rich.table import Table
 from rich.prompt import Confirm
 from .config import load_config
+from .logger import logger
 
 console = Console()
 config = load_config()
@@ -27,15 +29,19 @@ def find_duplicates(target_path="."):
         console.print("[red]Error: Path does not exist![/red]")
         return
 
-    console.print(f"[cyan]Scanning for duplicates in:[/cyan] {target}")
-    
+    files = [f for f in target.rglob("*") if f.is_file()]
+    console.print(f"[cyan]Scanning {len(files)} files for duplicates...[/cyan]")
+
     hash_dict = defaultdict(list)
 
-    for file in target.rglob("*"):
-        if file.is_file():
+    with Progress() as progress:
+        task = progress.add_task("[yellow]Calculating hashes...", total=len(files))
+
+        for file in files:
             file_hash = get_file_hash(file)
             if file_hash:
                 hash_dict[file_hash].append(file)
+            progress.update(task, advance=1)
 
     duplicates = {h: files for h, files in hash_dict.items() if len(files) > 1}
 
@@ -55,8 +61,6 @@ def find_duplicates(target_path="."):
     for files in duplicates.values():
         size_mb = files[0].stat().st_size / (1024 * 1024)
         table.add_row(f"{size_mb:.2f}", str(len(files)), "\n".join([f.name for f in files]))
-        
-        # Keep first file, mark others for deletion
         delete_list.extend(files[1:])
 
     console.print(table)
@@ -64,11 +68,15 @@ def find_duplicates(target_path="."):
     if delete_list and config["general"].get("confirm_before_delete", True):
         if Confirm.ask(f"Delete {len(delete_list)} duplicate file(s)?", default=False):
             deleted = 0
-            for file in delete_list:
-                try:
-                    file.unlink()
-                    console.print(f"[red]Deleted:[/red] {file.name}")
-                    deleted += 1
-                except Exception as e:
-                    console.print(f"[red]Failed to delete {file.name}[/red]")
+            with Progress() as progress:
+                task = progress.add_task("[red]Deleting duplicates...", total=len(delete_list))
+                for file in delete_list:
+                    try:
+                        file.unlink()
+                        logger.info(f"Deleted duplicate: {file.name}")
+                        deleted += 1
+                    except Exception as e:
+                        logger.error(f"Failed to delete {file.name}: {e}")
+                    progress.update(task, advance=1)
+            
             console.print(f"\n[bold green]✅ Deleted {deleted} duplicate files.[/bold green]")
