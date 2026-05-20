@@ -27,6 +27,8 @@ def show_stats(target_path="."):
     table.add_row("Total Files", str(len(files)))
     table.add_row("Total Folders", str(len(dirs)))
     table.add_row("Total Size", f"{size_mb:.2f} MB")
-    table.add_row("Largest File", max((f.stat().st_size for f in files), default=0) / (1024*1024))
+    
+    largest_file = max((f.stat().st_size for f in files), default=0) / (1024*1024)
+    table.add_row("Largest File", f"{largest_file:.2f} MB")
 
     console.print(table)
