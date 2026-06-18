@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="quilean",
-    version="1.1.0",
+    version="1.0.0",
     description="A fast, smart and modern Python CLI tool to organize, clean and manage files",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
